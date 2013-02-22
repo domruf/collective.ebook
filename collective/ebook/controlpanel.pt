@@ -1,0 +1,129 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+  <head>
+    <metal:block fill-slot="top_slot">
+      <tal:defines tal:define="dummy python:request.set('disable_border',1);
+                               disable_column_one python:request.set('disable_plone.leftcolumn', 1);
+                               disable_column_two python:request.set('disable_plone.rightcolumn', 1);"/>
+    </metal:block>
+
+    <metal:block fill-slot="head_slot">
+        <tal:directory
+            define="resourceDirectory options/directory"
+            condition="nocall: resourceDirectory">
+          <metal:block
+              use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/resources" />
+        </tal:directory>
+
+        <style>
+          #portal-top,
+          #viewlet-above-content,
+          #portal-breadcrumbs,
+          #portal-footer,
+          #portal-colophon,
+          #portal-siteactions {
+            display: block;
+          }
+        </style>
+    </metal:block>
+  </head>
+
+  <body>
+    <metal:override fill-slot="portlets_one_slot">
+      <metal:prefs use-macro="here/portlet_prefs/macros/portlet" />
+    </metal:override>
+
+    <metal:main fill-slot="content">
+      <div id="content">
+        <a id="setup-link"
+           tal:attributes="href string:${context/absolute_url}/plone_control_panel"
+           i18n:domain="plone"
+           i18n:translate="">
+          Site Setup
+        </a>
+        ›
+        <h1 class="documentFirstHeading">PDF e-book</h1>
+
+        <form method="post">
+          <p class="documentDescription">
+            Generelle indstillinger:
+          </p>
+
+          <span tal:replace="structure context/@@authenticator/authenticator" />
+
+          <dl class="portalMessage error" tal:condition="options/error">
+            <dt i18n:translate="">
+              Error
+            </dt>
+            <dd tal:content="options/error" />
+          </dl>
+
+          <div class="formControls">
+            <div class="field">
+              <label class="formQuestion">HTML til PDF eksekverbar</label>
+              <span title="Påkrævet" class="required">■</span>
+              <div class="formHelp">
+                Dette er normalt programmet PrinceXML (med en
+                kommandolinje, der tager input fra <tt>stdin</tt> og
+                sender output til <tt>stdout</tt>).
+              </div>
+              <input type="text" name="html_to_pdf_executable"
+                     tal:attributes="value request/html_to_pdf_executable|
+                                     options/settings/html_to_pdf_executable|nothing"
+                     />
+            </div>
+            <div class="field">
+              <label class="formQuestion">SSH</label>
+              <div class="formHelp">
+                Hvis programmet skal køres på en anden maskine (gennem
+                en SSH-tunnel), skrives host her (e.g. <tt>host</tt> eller
+                <tt>user@host</tt>).
+              </div>
+              <input type="text" name="ssh_host"
+                     tal:attributes="value options/settings/ssh_host|nothing"
+                     />
+            </div>
+            <div class="field" tal:condition="options/templates">
+              <label class="formQuestion">Skabelon</label>
+              <div class="formHelp">
+                Vælg den HTML-skabelon, der skal bruges til at formattere indholdet.
+              </div>
+              <select name="template">
+                <option tal:define="selection options/settings/template|nothing"
+                        tal:repeat="item options/templates"
+                        tal:attributes="value python: item.token;
+                                        selected python: 'selected' if item.value == selection
+                                                         else None"
+                        tal:content="python: item.title"
+                        />
+              </select>
+            </div>
+
+            <input name="save" type="submit" value="Gem" />
+            <input name="copy" type="submit" value="Kopiér skabeloner"
+                   tal:condition="not: options/directory/listDirectory|nothing" />
+          </div>
+
+        </form>
+
+        <div tal:define="resourceDirectory options/directory"
+             tal:condition="nocall: resourceDirectory">
+          <hr />
+          <br />
+          <p class="documentDescription">
+            Redigering af skabeloner:
+          </p>
+
+          <metal:block
+              use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/filemanager" />
+        </div>
+      </div>
+    </metal:main>
+  </body>
+</html>

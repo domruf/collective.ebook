@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n"
+      lang="en"
+      metal:use-macro="context/main_template/macros/master"
+      i18n:domain="plone">
+
+  <head>
+    <metal:block fill-slot="head_slot">
+      <tal:directory define="resourceDirectory options/directory"
+                     condition="nocall: resourceDirectory">
+        <metal:block
+            use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/resources" />
+      </tal:directory>
+
+      <script type="text/javascript">
+        (function($) {
+          var content = $("#portal-column-content");
+          $("body").children().replaceWith(content);
+        })(jQuery);
+      </script>
+    </metal:block>
+  </head>
+
+  <body>
+    <metal:block fill-slot="top_slot">
+      <tal:defines
+          define="dummy python:request.set('disable_border',1);
+                  disable_column_one python:request.set('disable_plone.leftcolumn', 1);
+                  disable_column_two python:request.set('disable_plone.rightcolumn', 1);"/>
+    </metal:block>
+
+    <metal:main fill-slot="content">
+      <h1>Hej</h1>
+      <tal:directory define="resourceDirectory options/directory"
+                     condition="nocall: resourceDirectory">
+        <metal:block
+            use-macro="resourceDirectory/@@plone.resourceeditor.filemanager/macros/filemanager" />
+      </tal:directory>
+    </metal:main>
+  </body>
+</html>

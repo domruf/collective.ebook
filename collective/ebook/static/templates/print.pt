@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+   Template Namespace:
+
+   You can use the variables below in the template.
+
+   context           | The portal object
+   request           | The HTTP request object
+   –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+   macros            | Access to template macros
+   –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+   soup              | The 'beautiful soup' object that holds the body text.
+   headings          | The data structure that holds the body headings.
+   –––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––––
+   inline            | Used to include images.
+   publication_date  | The most recent 'effective date' of included content.
+   modification_date | The most recent 'modified date' of included content.
+
+   Always make a backup before making any changes!
+
+-->
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"
+      xmlns:tal="http://xml.zope.org/namespaces/tal"
+      xmlns:metal="http://xml.zope.org/namespaces/metal"
+      xmlns:i18n="http://xml.zope.org/namespaces/i18n">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <style>
+    @page {
+      margin: 2cm 1.5cm 3.6cm;
+      padding-bottom: 2cm;
+      padding-top: 0.4cm;
+      size: A4;
+
+      @top-right {
+        border-bottom: 0.3mm solid #aaa;
+        content: counter(page);
+        font-family: Arial;
+        font-size: 10pt;
+        padding-top: 1cm;
+      }
+
+      @bottom-left {
+        content: flow(docfooter);
+      }
+    }
+
+    body {
+      font-family: Arial;
+      font-size: 10.5pt;
+    }
+
+    #logo .pull-right {
+      text-align: right;
+    }
+
+    #logo {
+      margin-bottom: 6.5cm;
+    }
+
+    #footer {
+      flow: static(docfooter);
+      font-size: 9pt;
+      padding-top: 0.5cm;
+    }
+
+    #footer a {
+      color: black;
+      text-decoration: none;
+    }
+
+    #toc {
+      page-break-before: always;
+    }
+
+    ul.toc {
+      font-size: 9pt;
+      page-break-after: always;
+      margin-left: 0;
+    }
+
+    ul.toc, ul.toc ul {
+      list-style-type: none;
+      padding-top: 0.4em;
+    }
+
+    ul.toc ul {
+      font-weight: normal;
+      margin-left: 0.5cm;
+    }
+
+    ul.toc > li {
+      margin-bottom: 0.8cm !important;
+    }
+
+    ul.toc li {
+      margin-bottom: 0.5em;
+      line-height: 0.9em;
+    }
+
+    ul.toc a {
+      text-decoration: none;
+      color: black;
+    }
+
+    ul.toc > li {
+      line-height: 1em;
+    }
+
+    ul.toc > li > a {
+      font-size: 14pt;
+      font-weight: bold;
+    }
+
+    ul.toc > li > ul > li > a {
+      font-size: 10pt;
+      font-weight: bold;
+    }
+
+    ul.toc a::after {
+      content: leader(' ') target-counter(attr(href), page);
+      font-style: normal;
+    }
+
+    ul.toc > li.frontmatter a::after {
+      content: leader(' ') target-counter(attr(href), page, lower-roman);
+      font-style: normal;
+    }
+
+    ul.toc > li.endmatter a::after {
+      content: leader(' ') target-counter(attr(href), page);
+      font-style: normal;
+    }
+
+    ul.toc > li.chapter::before {
+      content: "Chapter " counter(toc-chapter, decimal);
+      display: block;
+      margin: 1em 0 0.1em -2.5cm;
+      font-weight: normal;
+      counter-increment: toc-chapter;
+      page-break-after: avoid;
+    }
+    </style>
+  </head>
+  <body tal:define="portal context/portal_url/getPortalObject">
+    <div class="cover">
+      <div id="logo">
+        <div class="pull-right">
+          <img tal:attributes="src python: inline('plone.png')" />
+        </div>
+      </div>
+
+      <div id="footer" metal:define-macro="footer">
+        Published:
+        <tal:date replace="python: publication_date.strftime('%d/%m/%y')" /><br />
+        Updated:
+        <tal:date replace="python: modification_date.strftime('%d/%m/%y')" /><br />
+        <span tal:content="portal/Title" />
+      </div>
+
+      <h1 tal:content="portal/Title" />
+    </div>
+
+    <div id="toc" tal:condition="headings">
+      <h2>Contents</h2>
+      <ul class="toc" tal:define="level python: 0; depth python: 3">
+        <metal:list define-macro="list">
+          <li tal:repeat="heading headings">
+            <a tal:attributes="href string:#${heading/id}"
+               tal:content="heading/title"
+               />
+            <tal:children condition="heading/children">
+              <tal:nest define="headings heading/children">
+                <ul tal:define="level python: level + 1"
+                    tal:condition="python: level &lt; depth">
+                  <metal:recurse use-macro="macros/list" />
+                </ul>
+              </tal:nest>
+            </tal:children>
+          </li>
+        </metal:list>
+      </ul>
+    </div>
+
+    <div id="content">
+      <tal:text replace="structure python: unicode(soup)" />
+    </div>
+  </body>
+</html>

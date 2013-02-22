@@ -1,0 +1,23 @@
+#content ul.dynatree-container {
+    margin-left: 0;
+}
+
+.tree-selection-header {
+    background: #555;
+    line-height: 2em;
+    padding: 0 10px;
+    color: white;
+    text-align: center;
+    position: relative;
+    top: 1em;
+}
+
+.tree-selection-header .select {
+    float: left;
+}
+
+.tree-selection-header a.toggle {
+    float: right;
+    color: white;
+    text-decoration: underline;
+}

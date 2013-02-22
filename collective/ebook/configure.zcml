@@ -1,0 +1,102 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    xmlns:cmf="http://namespaces.zope.org/cmf"
+    xmlns:genericsetup="http://namespaces.zope.org/genericsetup"
+    xmlns:i18n="http://namespaces.zope.org/i18n"
+    xmlns:browser="http://namespaces.zope.org/browser"
+    xmlns:plone="http://namespaces.plone.org/plone"
+    i18n_domain="collective.ebook">
+
+  <five:registerPackage package="." initialize=".initialize" />
+
+  <include package="plone.resource" />
+  <include package="plone.resourceeditor" />
+
+  <genericsetup:registerProfile
+      name="default"
+      title="collective.ebook"
+      directory="profiles/default"
+      description="Generate PDF documents from site content."
+      provides="Products.GenericSetup.interfaces.EXTENSION"
+      />
+
+  <adapter
+      name="collective.ebook"
+      factory=".schema.ATExtensionSchema"
+      provides="archetypes.schemaextender.interfaces.ISchemaExtender"
+      />
+
+  <adapter
+      name="allowPDF"
+      factory=".schema.indexAllowPDF"
+      />
+
+  <browser:viewlet
+      name="ebook-form"
+      manager="plone.app.layout.viewlets.interfaces.IBelowContentBody"
+      class=".browser.FormViewlet"
+      view="plone.app.layout.globals.interfaces.IViewView"
+      layer=".interfaces.IBrowserLayer"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="ebook-controlpanel"
+      for="Products.CMFPlone.interfaces.IPloneSiteRoot"
+      class=".controlpanel.ControlPanel"
+      permission="cmf.ManagePortal"
+      layer=".interfaces.IBrowserLayer"
+      />
+
+  <browser:page
+      name="ebook-enabled"
+      for="Products.Archetypes.interfaces.IBaseContent"
+      class=".browser.HelperView"
+      layer=".interfaces.IBrowserLayer"
+      attribute="isEnabled"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="ebook-submit"
+      for="Products.Archetypes.interfaces.IBaseContent"
+      class=".browser.HelperView"
+      layer=".interfaces.IBrowserLayer"
+      attribute="submit"
+      permission="zope2.View"
+      />
+
+  <browser:page
+      name="ebook-select.json"
+      for="Products.Archetypes.interfaces.IBaseContent"
+      class=".browser.HelperView"
+      layer=".interfaces.IBrowserLayer"
+      attribute="getChildrenAsJson"
+      permission="zope2.View"
+      />
+
+  <browser:resourceDirectory
+      name="collective.ebook"
+      directory="static"
+      />
+
+  <adapter
+      name="ebook"
+      for="* .interfaces.IBrowserLayer"
+      provides="zope.traversing.interfaces.ITraversable"
+      factory=".traversal.ResourceTraverser"
+      />
+
+  <utility
+      component=".vocabularies.Templates"
+      name="collective.ebook.vocabularies.Templates"
+      />
+
+  <plone:static
+      directory="static/templates"
+      name="templates"
+      type="ebook"
+      />
+
+</configure>

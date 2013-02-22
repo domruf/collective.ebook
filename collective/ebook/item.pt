@@ -1,0 +1,7 @@
+<div tal:define="item nocall: options/item">
+  <h1 tal:define="path item/getPhysicalPath;
+                  level python: len(path)"
+      tal:attributes="class string:level-${level}"
+      tal:content="python: item.Title()" />
+  <div tal:content="item/getText|nothing" />
+</div>
