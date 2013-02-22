@@ -16,6 +16,7 @@ setup(name='collective.ebook',
       author_email='mborch@gmail.com',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['collective', ],
+      license="GPLv3+",
       include_package_data=True,
       zip_safe=False,
       install_requires=[

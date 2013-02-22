@@ -8,6 +8,9 @@ It relies on an external program that transforms HTML into PDF (note
 that the add-on was designed with `PrinceXML
 <http://www.princexml.com/`_ in mind).
 
+Note that currently, templates, labels, and descriptions are all in
+Danish.
+
 
 Compatibility
 -------------
@@ -20,3 +23,13 @@ might be compatibility issues with some provided JavaScript libraries
 to provide it, too.
 
 
+License
+-------
+
+GPLv3 (http://www.gnu.org/licenses/gpl.html).
+
+
+Author
+------
+
+Malthe Borch <mborch@gmail.com>
