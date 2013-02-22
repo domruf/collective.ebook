@@ -9,6 +9,8 @@
   <form method="post"
         tal:attributes="action string:${options/folder/absolute_url}/@@ebook-submit">
     <span tal:replace="structure context/@@authenticator/authenticator"/>
+    <input type="hidden" name="token" />
+
     <div tal:attributes="id tree_id" name="selNodes">
       <a tal:attributes="href string:${context/absolute_url}/@@ebook-select.json"></a>
       <!-- this will be loaded dynamically -->
@@ -56,12 +58,6 @@
            data: {
               key: "%(uid)s",
            }
-         },
-         onActivate: function(node) {
-           console.log(node.data.title);
-         },
-        onDeactivate: function(node) {
-          console.log('-');
         },
         onLazyRead: function(node) {
           node.appendAjax({
@@ -84,14 +80,28 @@
       });
 
       tree.closest("form").submit(function(event) {
+        var token = new Date().getTime().toString();
+        $(this).find("input[name=token]").val(token);
+
         var spinner = $(this).find(".spinner").show();
         var submit = $(this).find("button[type=submit]").
            attr('disabled', 'disabled').
            blur();
-        $(window).unload(function() {
+
+        var enable = function() {
+           window.clearInterval(timer);
            submit.removeAttr('disabled');
            spinner.hide();
-        });
+           createCookie('ebook-download', '');
+        };
+
+        var timer = window.setInterval(function () {
+          var cookieValue = readCookie('ebook-download');
+          if (cookieValue == token) enable();
+        }, 1000);
+
+        $(window).unload(enable);
+
         var dynatree = tree.dynatree("getTree");
         var nodes = dynatree.getSelectedNodes();
 

@@ -492,7 +492,7 @@ class HelperView(object):
 
         parent.insert(index + 1, ' <span>(%s)</span>' % url)
 
-    def submit(self, html=False, selNodes=None):
+    def submit(self, html=False, token=None, selNodes=None):
         authenticator = getMultiAdapter(
             (self.context, self.request), name=u"authenticator"
         )
@@ -534,6 +534,10 @@ class HelperView(object):
             p.stdin.close()
 
             data = p.stdout.read()
+
+        # Set the download token, prompting Javascript to reset the
+        # user interface.
+        self.request.response.setCookie('ebook-download', token, quoted=False)
 
         return data
 
