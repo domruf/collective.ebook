@@ -6,7 +6,7 @@ PDF-article.
 
 It relies on an external program that transforms HTML into PDF (note
 that the add-on was designed with `PrinceXML
-<http://www.princexml.com/`_ in mind).
+<http://www.princexml.com/>`_ in mind).
 
 Note that currently, templates, labels, and descriptions are all in
 Danish.
