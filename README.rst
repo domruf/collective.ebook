@@ -32,7 +32,7 @@ Add 'collective.ebook' to the eggs-section of your buildout.cfg,
 run buildout, restart instance.
 
 Go to the quickinstaller of your site, accessible via
-yourhost.com:8080/plonesiteId/prefs_install_products_form
+'yourhost.com:8080/plonesiteId/prefs_install_products_form'
 and activate collective.ebooks.
 
 

@@ -1,1 +1,0 @@
-add trans for ../schema.py
