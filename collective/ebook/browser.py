@@ -411,12 +411,8 @@ class HelperView(object):
             image.extract()
             return
 
-        try:
-            data = str(obj)
-        except KeyError:
-            encoded = FALLBACK_IMAGE
-        else:
-            encoded = image_encode(data)
+        data = getattr(obj, "data", FALLBACK_IMAGE)
+        encoded = image_encode(data)
 
         image['src'] = encoded
 
