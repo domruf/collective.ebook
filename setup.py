@@ -6,7 +6,7 @@ def read(*pathnames):
 
 
 setup(name='collective.ebook',
-      version='1.0-dev',
+      version='1.0-dev-fork',
       description="Make content available in PDF-format.",
       long_description='\n'.join([
           read('README.rst'),

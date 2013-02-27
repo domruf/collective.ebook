@@ -1,0 +1,100 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: collective.ebook\n"
+"POT-Creation-Date: 2013-02-27 12:51+0000\n"
+"PO-Revision-Date: 2013-02-27 12:51+0000\n"
+"Last-Translator: ida <contact@ida-ebkes.eu>\n"
+"Language-Team: ida <contact@ida-ebkes.eu>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0\n"
+"Language-Code: en\n"
+"Language-Name: English\n"
+"Preferred-Encodings: utf-8 latin1\n"
+"Domain: collective.ebook\n"
+
+#: collective.ebook/collective/ebook/form.pt:6
+msgid "Choose"
+msgstr "Valg"
+
+#: collective.ebook/collective/ebook/form.pt:7
+msgid "Topic"
+msgstr "Tema"
+
+#: collective.ebook/collective/ebook/form.pt:8
+msgid "Choose all"
+msgstr "Vælg alle"
+
+#: collective.ebook/collective/ebook/form.pt:23
+msgid "Advanced options"
+msgstr "Avancerede indstillinger"
+
+#: collective.ebook/collective/ebook/form.pt:24
+msgid "Advanced options help text"
+msgstr "Disse indstillinger vises kun for brugere, der har rollen 'Administrator'."
+
+#: collective.ebook/collective/ebook/form.pt:32
+msgid "Show source code"
+msgstr "Vis HTML kildekode"
+
+#: collective.ebook/collective/ebook/form.pt:33
+msgid "Show source code help text"
+msgstr "Hvis dette er valgt, returneres et HTML-dokument, der kan bruges som input til f.eks. PrinceXML."
+
+#: collective.ebook/collective/ebook/form.pt:45
+msgid "Download PDF"
+msgstr "Hent din guide"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:67
+msgid "converter_executable"
+msgstr "HTML til PDF eksekverbar"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:72
+msgid "required"
+msgstr "Påkrævet"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:73
+msgid "converter_executable_help"
+msgstr "Dette er normalt programmet PrinceXML (med en kommandolinje, der tager input fra <tt>stdin</tt> og sender output til <tt>stdout</tt>)."
+
+#: collective.ebook/collective/ebook/controlpanel.pt:83
+msgid "remote_address"
+msgstr "Hvis programmet skal køres på en anden maskine (gennem en SSH-tunnel), skrives host her (e.g. <tt>host</tt> eller <tt>user@host</tt>)."
+
+#: collective.ebook/collective/ebook/controlpanel.pt:91
+msgid "Template"
+msgstr "Skabelon"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:92
+msgid "Template_help"
+msgstr "Vælg den HTML-skabelon, der skal bruges til at formattere indholdet."
+
+#: collective.ebook/collective/ebook/controlpanel.pt:108
+msgid "save"
+msgstr "Gem"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:110
+msgid "copy_templates"
+msgstr "Kopiér skabeloner"
+
+#: collective.ebook/collective/ebook/controlpanel.pt:121
+msgid "Edit templates"
+msgstr "Redigering af skabeloner:"
+
+
+#: collective.ebook/collective/ebook/schema.py:
+msgid "Enable PDF-generation"
+msgstr "Denne side kan indgå i PDF"
+
+#: collective.ebook/collective/ebook/schema.py:
+msgid "enable_pdf_help"
+msgstr "Hvis dette er valgt, vil en besøgende få mulighed for at medtage siden ved download i PDF-format."
+
+#: collective.ebook/collective/ebook/schema.py:
+msgid "show_pdf_button"
+msgstr "Vis PDF-værktøj på denne side."
+
+#: collective.ebook/collective/ebook/schema.py:
+msgid "show_pdf_button_help"
+msgstr "Hvis dette er valgt, vises en formular under sidens almindelig indhold, som besøgende kan benytte til at hente en PDF-artikel bestående af et udvalg af den valgte sektions artikler."

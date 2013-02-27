@@ -13,6 +13,7 @@ from plone.indexer import indexer
 
 from .interfaces import IBrowserLayer
 
+from collective.ebook import MessageFactory as _
 
 @indexer(IBaseContent)
 def indexAllowPDF(obj):
@@ -35,10 +36,11 @@ class ATExtensionSchema(object):
             schemata="default",
             default=True,
             widget=BooleanWidget(
-                label="Denne side kan indgå i PDF",
-                description=("Hvis dette er valgt, vil en besøgende "
-                             "få mulighed for at medtage siden ved "
-                             "download i PDF-format."),
+                label="Enable this article to be included in a in a PDF-generation",
+                label_msgid="Enable PDF-generation",
+                description="If this is checked, the article will be included when a PDF generation of a folder is triggered",
+                description_msgid="enable_pdf_help",
+                i18n_domain="collective.ebook",
             ),
         ),
 
@@ -47,12 +49,11 @@ class ATExtensionSchema(object):
             schemata="settings",
             default=False,
             widget=BooleanWidget(
-                label="Vis PDF-værktøj på denne side.",
-                description=("Hvis dette er valgt, vises en formular "
-                             "under sidens almindelig indhold, som "
-                             "besøgende kan benytte til at hente "
-                             "en PDF-artikel bestående af et udvalg af "
-                             "den valgte sektions artikler."),
+                label="Show PDF-generation-button on this article",
+                label_msgid="show_pdf_button",
+                description="Select this to enable the possibilty to generate a PDF of this content, select and deselect the inclusion of subfolders and articles.",
+                description_msgid="show_pdf_button_help",
+                i18n_domain="collective.ebook",
             ),
         ),
     )
