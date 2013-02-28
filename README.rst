@@ -73,5 +73,5 @@ Ida Ebkes <contact@ida-ebkes.eu>, translations and docs.
 Further credits
 ---------------
 
-dynatree is implemented to povide a nice UI and lazy loading for selecting 
+dynatree is implemented to provide a nice UI and lazy loading for selecting 
 arbitrary parts of subtrees.
