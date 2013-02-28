@@ -2,9 +2,8 @@
       xmlns:tal="http://xml.zope.org/namespaces/tal"
       xmlns:metal="http://xml.zope.org/namespaces/metal"
       xmlns:i18n="http://xml.zope.org/namespaces/i18n"
-      lang="en"
       metal:use-macro="context/main_template/macros/master"
-      i18n:domain="plone">
+      i18n:domain="collective.ebook">
 
   <head>
     <metal:block fill-slot="top_slot">
@@ -43,22 +42,21 @@
       <div id="content">
         <a id="setup-link"
            tal:attributes="href string:${context/absolute_url}/plone_control_panel"
-           i18n:domain="plone"
-           i18n:translate="">
+           i18n:translate="Site Setup">
           Site Setup
         </a>
         ›
         <h1 class="documentFirstHeading">PDF e-book</h1>
 
         <form method="post">
-          <p class="documentDescription">
-            Generelle indstillinger:
+          <p class="documentDescription" i18n:translate="General settings">
+            General settings
           </p>
 
           <span tal:replace="structure context/@@authenticator/authenticator" />
 
           <dl class="portalMessage error" tal:condition="options/error">
-            <dt i18n:translate="">
+            <dt>
               Error
             </dt>
             <dd tal:content="options/error" />
@@ -66,12 +64,14 @@
 
           <div class="formControls">
             <div class="field">
-              <label class="formQuestion">HTML til PDF eksekverbar</label>
-              <span title="Påkrævet" class="required">■</span>
-              <div class="formHelp">
-                Dette er normalt programmet PrinceXML (med en
-                kommandolinje, der tager input fra <tt>stdin</tt> og
-                sender output til <tt>stdout</tt>).
+              <label class="formQuestion" i18n:translate="converter_executable">
+                HTML to PDF executable
+              </label>
+
+              <span title="Required" class="required"
+                    i18n:attributes="title required">■</span>
+              <div class="formHelp" i18n:translate="converter_executable_help">
+                This can be e.g. PrinceXML (enter 'prince -' below), or also wkhtmltopdf (enter 'wkhtmltopdf - -'). Any converter that can take input from <tt>stdin</tt> and can send it to <tt>stdout</tt>.
               </div>
               <input type="text" name="html_to_pdf_executable"
                      tal:attributes="value request/html_to_pdf_executable|
@@ -80,19 +80,17 @@
             </div>
             <div class="field">
               <label class="formQuestion">SSH</label>
-              <div class="formHelp">
-                Hvis programmet skal køres på en anden maskine (gennem
-                en SSH-tunnel), skrives host her (e.g. <tt>host</tt> eller
-                <tt>user@host</tt>).
+              <div class="formHelp" i18n:translate="remote_adress">
+                If the program runs on another machine, enter the host here, e.g. <tt>host</tt> or <tt>user@host</tt>.
               </div>
               <input type="text" name="ssh_host"
                      tal:attributes="value options/settings/ssh_host|nothing"
                      />
             </div>
             <div class="field" tal:condition="options/templates">
-              <label class="formQuestion">Skabelon</label>
-              <div class="formHelp">
-                Vælg den HTML-skabelon, der skal bruges til at formattere indholdet.
+              <label class="formQuestion" i18n:translate="Template">Template</label>
+              <div class="formHelp" i18n:translate="Template_help">
+                Choose the HTML-template, which is supposed to format the content.
               </div>
               <select name="template">
                 <option tal:define="selection options/settings/template|nothing"
@@ -105,8 +103,11 @@
               </select>
             </div>
 
-            <input name="save" type="submit" value="Gem" />
-            <input name="copy" type="submit" value="Kopiér skabeloner"
+            <!-- TODO: i18n -->
+            <input name="save" type="submit" value="Save"
+                   i18n:attributes="value save" />
+            <input name="copy" type="submit" value="Copy templates"
+                   i18n:attributes="value copy_templates"
                    tal:condition="not: options/directory/listDirectory|nothing" />
           </div>
 
@@ -116,8 +117,9 @@
              tal:condition="nocall: resourceDirectory">
           <hr />
           <br />
-          <p class="documentDescription">
-            Redigering af skabeloner:
+          <p class="documentDescription" 
+             i18n:translate="Edit templates">
+            Edit templates
           </p>
 
           <metal:block

@@ -1,9 +1,11 @@
 <div tal:define="url context/absolute_url;
-                 tree_id string:tree-${options/unique_id}">
+                 tree_id string:tree-${options/unique_id}"
+     i18n:domain="collective.ebook">
+
   <p class="tree-selection-header" tal:attributes="id string:${tree_id}-control">
-    <span class="select">Valg</span>
-    <span class="title">Tema</span>
-	<a href="#" class="toggle">Vælg alle</a>
+    <span class="select" i18n:translate="Choose">Choose</span>
+    <span class="title" i18n:translate="Topic">Topic</span>
+	<a href="#" class="toggle" i18n:translate="Choose all">Choose all</a>
   </p>
 
   <form method="post"
@@ -18,18 +20,18 @@
 
     <div class="formControls">
       <fieldset tal:condition="view/isManager">
-        <legend>Avancerede indstillinger</legend>
-        <p class="formHelp">
-          Disse indstillinger vises kun for brugere, der har
-          rollen "Administrator".
+        <legend i18n:translate="Advanced options">Advanced options</legend>
+        <p class="formHelp" i18n:translate="Advanced options help text">
+          Administrators can use these options.
         </p>
         <div class="field">
           <input type="checkbox" name="html:boolean" class="noborder" />
           <input type="hidden" name="html:boolean:default" />
-          <label>Vis HTML kildekode</label>
-          <div class="formHelp">
-            Hvis dette er valgt, returneres et HTML-dokument, der kan
-            bruges som input til f.eks. PrinceXML.
+          <label i18n:translate="Show source code">Show source code</label>
+          <div class="formHelp" i18n:translate="Show source code help text">
+            If this is selected, you'll get a HTML-document, which you 
+            can use as an input document for PDF-generators, f.e 
+            PrinceXML.
           </div>
         </div>
       </fieldset>
@@ -38,8 +40,8 @@
                                     vertical-align: middle;
                                     padding-bottom: 2px"
              tal:attributes="src string:${context/portal_url}/spinner.png" />
-        <span style="vertical-align: middle; padding-bottom: 4px">
-          Hent din guide
+        <span i18n:translate="Download PDF" style="vertical-align: middle; padding-bottom: 4px">
+          Download PDF
         </span>
       </button>
     </div>
