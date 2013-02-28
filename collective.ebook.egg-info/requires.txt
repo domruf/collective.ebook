@@ -1,5 +1,0 @@
-setuptools
-plone.resource
-plone.resourceeditor
-plone.app.registry
-BeautifulSoup
