@@ -40,7 +40,7 @@
                                     vertical-align: middle;
                                     padding-bottom: 2px"
              tal:attributes="src string:${context/portal_url}/spinner.png" />
-        <span i18n:translate="Download PDF" style="vertical-align: middle; padding-bottom: 4px">
+        <span i18n:translate="" style="vertical-align: middle; padding-bottom: 4px">
           Download PDF
         </span>
       </button>
