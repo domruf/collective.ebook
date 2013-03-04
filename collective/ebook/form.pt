@@ -82,6 +82,7 @@
       });
 
       tree.closest("form").submit(function(event) {
+        var form = this;
         var token = new Date().getTime().toString();
         $(this).find("input[name=token]").val(token);
 
@@ -95,6 +96,7 @@
            submit.removeAttr('disabled');
            spinner.hide();
            createCookie('ebook-download', '');
+           $(form).find('input.selection').remove();
         };
 
         var timer = window.setInterval(function () {
@@ -112,9 +114,8 @@
           $(this).attr('method', 'GET');
         }
 
-        var form = this;
         $.each(nodes, function() {
-          var element = $("<input type='hidden' />");
+          var element = $("<input class='selection' type='hidden' />");
           element.attr({
               name: 'selNodes:list',
               value: this.data.key,
