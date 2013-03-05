@@ -344,7 +344,13 @@ class HelperView(object):
                         "Template not found: %r." % settings.template
                     )
 
-        cache_key = hash((source, str(source)))
+
+        try:
+            body = source.lastModifiedTimestamp
+        except AttributeError:
+            body = str(source)
+
+        cache_key = hash((source, body))
         template, cached_key = getattr(
             self.context, "_v_render_template", None
         ) or (None, cache_key)
