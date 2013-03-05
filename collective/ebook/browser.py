@@ -60,7 +60,7 @@ def image_encode(data, mimetype=None, filename=""):
 class PathSort(object):
     def __init__(self, paths):
         self.length = len(paths)
-        self.range = max(path.count('/') for path in paths)
+        self.range = max(path.count('/') for path in paths) + 1
         self.index = dict(
             (path, n) for (n, path) in enumerate(paths)
         ).__getitem__
@@ -75,9 +75,9 @@ class PathSort(object):
         v = 0
         for index, subpath in enumerate(subpaths):
             try:
-                i = self.index(subpath)
+                i = self.index(subpath) + 1
             except KeyError:
-                i = 1
+                i = 0
 
             v += i * self.length ** (self.range - index)
 
