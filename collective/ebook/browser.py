@@ -9,7 +9,11 @@ import operator
 import itertools
 import htmlentitydefs
 
-from simplejson import dumps
+try:
+    from simplejson import dumps
+except ImportError:
+    from json import dumps
+
 from subprocess import Popen, PIPE
 
 from BeautifulSoup import BeautifulSoup
