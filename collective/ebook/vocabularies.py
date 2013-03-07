@@ -30,7 +30,8 @@ class TemplateVocabulary(object):
                     [(entry.encode('utf-8'),
                       u"%s (filsystem, release %s)" % (entry, RELEASE))
                      for entry in static.listDirectory()
-                     if entry.encode('utf-8') not in entries]
+                     if entry.encode('utf-8') not in entries and
+                        entry.endswith('.pt')]
 
         return SimpleVocabulary(
             [SimpleTerm(entry, entry, title) for (entry, title) in templates]
