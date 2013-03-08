@@ -527,6 +527,7 @@ class HelperView(object):
 
         soup, headings = self.process(items)
         data = self.render(soup, headings, pub_date, mod_date)
+        data = data.replace('&nbsp;', '&#xA0;')
 
         if not html:
             name = self.context.portal_url.getPortalObject().Title().lower()
