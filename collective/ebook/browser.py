@@ -411,8 +411,9 @@ class HelperView(object):
 
     def inlineImage(self, context, image):
         url = image.get('src').encode('utf-8')
-        if(url.startswith(self.context.portal_url.absolute_url()[:-10])):
-            url = url[len(self.context.portal_url.absolute_url()[:-10]):]
+        if(url.startswith(self.context.portal_url())):
+            url = url[len(self.context.portal_url()):]
+            url = url.lstrip('/')
         if '://' in url or url.startswith('data:'):
             return
 
@@ -437,9 +438,9 @@ class HelperView(object):
             reference_tool = getToolByName(self, 'reference_catalog')
             obj = reference_tool.lookupObject(url.split('/')[-1])
             url = obj.absolute_url()
-        if(url.startswith(self.context.portal_url.absolute_url()[:-10])):
-            url = url[len(self.context.portal_url.absolute_url()[:-10]):]
-            context = self.context.portal_url.getPortalObject()
+        if(url.startswith(self.context.absolute_url())):
+            url = url[len(self.context.absolute_url()):]
+            url = url.lstrip('/')
         if url.startswith('#'):
             return
 
