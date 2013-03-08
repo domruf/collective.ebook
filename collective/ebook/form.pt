@@ -1,7 +1,11 @@
 <div tal:define="url context/absolute_url;
                  tree_id string:tree-${options/unique_id}"
-     i18n:domain="collective.ebook">
+     i18n:domain="collective.ebook"
+     class="ebook_wrapper">
 
+  <a id="ebook_button" href="#" style="float: right;">download pdf</a>
+  <img tal:attributes="src string:${options/folder/absolute_url}/pdf.png" alt="PDF e-book" style="float: right;padding-right:3px;">
+  <div id="ebook_controls" style="display: none;position: relative;top: 2em;">
   <p class="tree-selection-header" tal:attributes="id string:${tree_id}-control">
     <span class="select" i18n:translate="Choose">Choose</span>
     <span class="title" i18n:translate="Topic">Topic</span>
@@ -48,84 +52,94 @@
   </form>
 
   <script type="text/javascript">
-    $(function() {
-       var tree = $('#tree-%(unique_id)s');
-       var url = tree.children("a").first().attr('href');
-       tree.dynatree({
-         fx: { height: "toggle", duration: 200 },
-         checkbox: true,
-         selectMode: 3,
-         initAjax: {
-           url: url,
-           data: {
-              key: "%(uid)s",
-           }
-        },
-        onLazyRead: function(node) {
-          node.appendAjax({
-            url: url,
-            data: {
-              'key': node.data.key,
-              'select:boolean': node.bSelected ? '1' : '',
-            }
-          });
-        },
-      });
+    var run = true;
+    $('#ebook_button').click(function(){
+        if(run){
+            $(function() {
+               var tree = $('#tree-%(unique_id)s');
+               var url = tree.children("a").first().attr('href');
+               tree.dynatree({
+                 fx: { height: "toggle", duration: 200 },
+                 checkbox: true,
+                 selectMode: 3,
+                 initAjax: {
+                   url: url,
+                   data: {
+                      key: "%(uid)s",
+                   }
+                },
+                onLazyRead: function(node) {
+                  node.appendAjax({
+                    url: url,
+                    data: {
+                      'key': node.data.key,
+                      'select:boolean': node.bSelected ? '1' : '',
+                    }
+                  });
+                },
+              });
 
-      var control = $('#tree-%(unique_id)s-control');
+              var control = $('#tree-%(unique_id)s-control');
 
-      control.find('a.toggle').click(function() {
-         tree.dynatree("getRoot").visit(function(node) {
-           node.select(true);
-         });
-        return false;
-      });
+              control.find('a.toggle').click(function() {
+                 tree.dynatree("getRoot").visit(function(node) {
+                   node.select(true);
+                 });
+                return false;
+              });
 
-      tree.closest("form").submit(function(event) {
-        var form = this;
-        var token = new Date().getTime().toString();
-        $(this).find("input[name=token]").val(token);
+              tree.closest("form").submit(function(event) {
+                var form = this;
+                var token = new Date().getTime().toString();
+                $(this).find("input[name=token]").val(token);
 
-        var spinner = $(this).find(".spinner").show();
-        var submit = $(this).find("button[type=submit]").
-           attr('disabled', 'disabled').
-           blur();
+                var spinner = $(this).find(".spinner").show();
+                var submit = $(this).find("button[type=submit]").
+                   attr('disabled', 'disabled').
+                   blur();
 
-        var enable = function() {
-           window.clearInterval(timer);
-           submit.removeAttr('disabled');
-           spinner.hide();
-           createCookie('ebook-download', '');
-           $(form).find('input.selection').remove();
-        };
+                var enable = function() {
+                   window.clearInterval(timer);
+                   submit.removeAttr('disabled');
+                   spinner.hide();
+                   createCookie('ebook-download', '');
+                   $(form).find('input.selection').remove();
+                };
 
-        var timer = window.setInterval(function () {
-          var cookieValue = readCookie('ebook-download');
-          if (cookieValue == token) enable();
-        }, 1000);
+                var timer = window.setInterval(function () {
+                  var cookieValue = readCookie('ebook-download');
+                  if (cookieValue == token) enable();
+                }, 1000);
 
-        $(window).unload(enable);
+                $(window).unload(enable);
 
-        var dynatree = tree.dynatree("getTree");
-        var nodes = dynatree.getSelectedNodes();
+                var dynatree = tree.dynatree("getTree");
+                var nodes = dynatree.getSelectedNodes();
 
-        use_html = $(this).find('input[name=html:boolean]').first().attr('checked');
-        if (use_html) {
-          $(this).attr('method', 'GET');
+                use_html = $(this).find('input[name=html:boolean]').first().attr('checked');
+                if (use_html) {
+                  $(this).attr('method', 'GET');
+                }
+
+                $.each(nodes, function() {
+                  var element = $("<input class='selection' type='hidden' />");
+                  element.attr({
+                      name: 'selNodes:list',
+                      value: this.data.key,
+                  });
+
+                  element.appendTo(form);
+                });
+
+                return true;
+              });
+            });
+            
+            $('#ebook_controls').toggle('fold', 1000);
+            run = false;
         }
-
-        $.each(nodes, function() {
-          var element = $("<input class='selection' type='hidden' />");
-          element.attr({
-              name: 'selNodes:list',
-              value: this.data.key,
-          });
-
-          element.appendTo(form);
-        });
-
-        return true;
-      });
+        return false;
     });
   </script>
+  </div>
 </div>
