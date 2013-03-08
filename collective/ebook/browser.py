@@ -193,7 +193,10 @@ class HelperView(object):
         try:
             text = item.getText()
         except AttributeError:
-            return title
+            if(item.portal_type == 'Image'):
+                text = '%s\n<img src="%s"/>' % (title, item.absolute_url_path())
+            else:
+                return '<div class="section" id="%s">%s</div>' % (item.UID(), title)
 
         soup = BeautifulSoup(text)
 
@@ -220,7 +223,7 @@ class HelperView(object):
                 for l, h in levels:
                     h.name = "h%d" % (l - difference)
 
-        return '<div class="section">%s</div>' % "\n".join((title, str(soup)))
+        return '<div class="section" id="%s">%s</div>' % (item.UID(),"\n".join((title, str(soup))))
 
     def process(self, items):
         text = "\n".join(self.publish(item, level) for (item, level) in items)
@@ -462,7 +465,7 @@ class HelperView(object):
             if isDefaultPage(parent, obj):
                 obj = parent
 
-        link['href'] = obj.absolute_url()
+        link['href'] = '#%s' % obj.UID()
 
     def transformLink(self, portal_url, link):
         url = link.get('href', '')
