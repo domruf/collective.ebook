@@ -196,7 +196,7 @@ class HelperView(object):
             if(item.portal_type == 'Image'):
                 text = '%s\n<img src="%s"/>' % (title, item.absolute_url_path())
             else:
-                return '<div class="section" id="%s">%s</div>' % (item.UID(), title)
+                return '<div class="section" id="%s">%s</div><p>%s content can not be embedded into the PDF.</p>' % (item.UID(), title, item.portal_type)
 
         soup = BeautifulSoup(text)
 
