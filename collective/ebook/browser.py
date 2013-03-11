@@ -412,8 +412,23 @@ class HelperView(object):
 
         return unicode(soup)
 
+    
+    def resolveuid(self, url):
+        reference_tool = getToolByName(self, 'reference_catalog')
+        url_elements = url.split('/', 2)
+        obj = reference_tool.lookupObject(url_elements[1])
+        if(obj):
+            if(len(url_elements) > 2):
+                return '%s/%s' % (obj.absolute_url(), url_elements[2])
+            else:
+                return obj.absolute_url()
+        else:
+            return url
+    
     def inlineImage(self, context, image):
         url = image.get('src').encode('utf-8')
+        if(url.startswith('resolveuid')):
+            url = self.resolveuid(url)
         if(url.startswith(self.context.portal_url())):
             url = url[len(self.context.portal_url()):]
             url = url.lstrip('/')
@@ -421,12 +436,17 @@ class HelperView(object):
             return
 
         try:
-            obj = context.restrictedTraverse(url)
+            obj = context.restrictedTraverse(urllib.unquote(url))
+            data = getattr(obj, "data", FALLBACK_IMAGE)
+        except AttributeError:
+            # the image might be a thumbnail
+            img, kind = url.rsplit('/', 1)
+            obj = context.restrictedTraverse(urllib.unquote(img))
+            data = getattr(obj.getField('image').getScale(obj, kind.replace('image_', '')), "data", FALLBACK_IMAGE)
         except NotFound:
             image.extract()
             return
 
-        data = getattr(obj, "data", FALLBACK_IMAGE)
         encoded = image_encode(data)
 
         image['src'] = encoded
@@ -438,13 +458,15 @@ class HelperView(object):
             return
         
         if(url.startswith('resolveuid')):
-            reference_tool = getToolByName(self, 'reference_catalog')
-            obj = reference_tool.lookupObject(url.split('/')[-1])
-            url = obj.absolute_url()
+            url = self.resolveuid(url)
         if(url.startswith(self.context.absolute_url())):
             url = url[len(self.context.absolute_url()):]
             url = url.lstrip('/')
         if url.startswith('#'):
+            return
+        if url.startswith('mailto:'):
+            return
+        if url.startswith('\\\\'):
             return
 
         if '://' in url and url.index('://') <= 5:
@@ -457,9 +479,12 @@ class HelperView(object):
         url = url.encode('utf-8')
 
         try:
-            obj = context.restrictedTraverse(url)
+            obj = context.restrictedTraverse(urllib.unquote(url))
         except NotFound:
             obj = context
+        except Exception:
+            logger.warn('error resolving url: %s' % url)
+            return
         else:
             parent = obj.aq_parent
             if isDefaultPage(parent, obj):
