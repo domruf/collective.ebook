@@ -425,13 +425,11 @@ class HelperView(object):
     
     def resolveuid(self, url):
         reference_tool = getToolByName(self, 'reference_catalog')
-        url_elements = url.split('/', 2)
-        obj = reference_tool.lookupObject(url_elements[1])
+        m = re.search('resolveuid/([^/]+)(/.*)?', url)
+        
+        obj = reference_tool.lookupObject(m.groups()[0])
         if(obj):
-            if(len(url_elements) > 2):
-                return '%s/%s' % (obj.absolute_url(), url_elements[2])
-            else:
-                return obj.absolute_url()
+            return '%s%s' % (obj.absolute_url(), m.groups()[1] or '')
         else:
             return url
     
