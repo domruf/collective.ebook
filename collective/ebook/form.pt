@@ -4,142 +4,142 @@
      class="ebook_wrapper">
 
   <a id="ebook_button" href="#" style="float: right;">download pdf</a>
-  <img tal:attributes="src string:${options/folder/absolute_url}/pdf.png" alt="PDF e-book" style="float: right;padding-right:3px;">
+  <img tal:attributes="src string:${options/folder/absolute_url}/pdf.png" alt="PDF e-book" style="float: right;padding-right:3px;"/>
   <div id="ebook_controls" style="display: none;position: relative;top: 2em;">
-  <p class="tree-selection-header" tal:attributes="id string:${tree_id}-control">
-    <span class="select" i18n:translate="Choose">Choose</span>
-    <span class="title" i18n:translate="Topic">Topic</span>
-	<a href="#" class="toggle" i18n:translate="Choose all">Choose all</a>
-  </p>
+      <p class="tree-selection-header" tal:attributes="id string:${tree_id}-control">
+        <span class="select" i18n:translate="Choose">Choose</span>
+        <span class="title" i18n:translate="Topic">Topic</span>
+	    <a href="#" class="toggle" i18n:translate="Choose all">Choose all</a>
+      </p>
 
-  <form method="post"
-        tal:attributes="action string:${options/folder/absolute_url}/@@ebook-submit">
-    <span tal:replace="structure context/@@authenticator/authenticator"/>
-    <input type="hidden" name="token" />
+      <form method="post"
+            tal:attributes="action string:${options/folder/absolute_url}/@@ebook-submit">
+        <span tal:replace="structure context/@@authenticator/authenticator"/>
+        <input type="hidden" name="token" />
 
-    <div tal:attributes="id tree_id" name="selNodes">
-      <a tal:attributes="href string:${context/absolute_url}/@@ebook-select.json"></a>
-      <!-- this will be loaded dynamically -->
-    </div>
-
-    <div class="formControls">
-      <fieldset tal:condition="view/isManager">
-        <legend i18n:translate="Advanced options">Advanced options</legend>
-        <p class="formHelp" i18n:translate="Advanced options help text">
-          Administrators can use these options.
-        </p>
-        <div class="field">
-          <input type="checkbox" name="html:boolean" class="noborder" />
-          <input type="hidden" name="html:boolean:default" />
-          <label i18n:translate="Show source code">Show source code</label>
-          <div class="formHelp" i18n:translate="Show source code help text">
-            If this is selected, you'll get a HTML-document, which you 
-            can use as an input document for PDF-generators, f.e 
-            PrinceXML.
-          </div>
+        <div tal:attributes="id tree_id" name="selNodes">
+          <a tal:attributes="href string:${context/absolute_url}/@@ebook-select.json"></a>
+          <!-- this will be loaded dynamically -->
         </div>
-      </fieldset>
-      <button style="padding: 0.25em 0.5em" type="submit">
-        <img class="spinner" style="display: none;
-                                    vertical-align: middle;
-                                    padding-bottom: 2px"
-             tal:attributes="src string:${context/portal_url}/spinner.png" />
-        <span i18n:translate="" style="vertical-align: middle; padding-bottom: 4px">
-          Download PDF
-        </span>
-      </button>
-    </div>
-  </form>
 
-  <script type="text/javascript">
-    var run = true;
-    $('#ebook_button').click(function(){
-        if(run){
-            $(function() {
-               var tree = $('#tree-%(unique_id)s');
-               var url = tree.children("a").first().attr('href');
-               tree.dynatree({
-                 fx: { height: "toggle", duration: 200 },
-                 checkbox: true,
-                 selectMode: 3,
-                 initAjax: {
-                   url: url,
-                   data: {
-                      key: "%(uid)s",
-                   }
-                },
-                onLazyRead: function(node) {
-                  node.appendAjax({
-                    url: url,
-                    data: {
-                      'key': node.data.key,
-                      'select:boolean': node.bSelected ? '1' : '',
+        <div class="formControls">
+          <fieldset tal:condition="view/isManager">
+            <legend i18n:translate="Advanced options">Advanced options</legend>
+            <p class="formHelp" i18n:translate="Advanced options help text">
+              Administrators can use these options.
+            </p>
+            <div class="field">
+              <input type="checkbox" name="html:boolean" class="noborder" />
+              <input type="hidden" name="html:boolean:default" />
+              <label i18n:translate="Show source code">Show source code</label>
+              <div class="formHelp" i18n:translate="Show source code help text">
+                If this is selected, you'll get a HTML-document, which you 
+                can use as an input document for PDF-generators, f.e 
+                PrinceXML.
+              </div>
+            </div>
+          </fieldset>
+          <button style="padding: 0.25em 0.5em" type="submit">
+            <img class="spinner" style="display: none;
+                                        vertical-align: middle;
+                                        padding-bottom: 2px"
+                 tal:attributes="src string:${context/portal_url}/spinner.png" />
+            <span i18n:translate="" style="vertical-align: middle; padding-bottom: 4px">
+              Download PDF
+            </span>
+          </button>
+        </div>
+      </form>
+
+      <script type="text/javascript">
+        var run = true;
+        $('#ebook_button').click(function(){
+            if(run){
+                $(function() {
+                   var tree = $('#tree-%(unique_id)s');
+                   var url = tree.children("a").first().attr('href');
+                   tree.dynatree({
+                     fx: { height: "toggle", duration: 200 },
+                     checkbox: true,
+                     selectMode: 3,
+                     initAjax: {
+                       url: url,
+                       data: {
+                          key: "%(uid)s",
+                       }
+                    },
+                    onLazyRead: function(node) {
+                      node.appendAjax({
+                        url: url,
+                        data: {
+                          'key': node.data.key,
+                          'select:boolean': node.bSelected ? '1' : '',
+                        }
+                      });
+                    },
+                  });
+
+                  var control = $('#tree-%(unique_id)s-control');
+
+                  control.find('a.toggle').click(function() {
+                     tree.dynatree("getRoot").visit(function(node) {
+                       node.select(true);
+                     });
+                    return false;
+                  });
+
+                  tree.closest("form").submit(function(event) {
+                    var form = this;
+                    var token = new Date().getTime().toString();
+                    $(this).find("input[name=token]").val(token);
+
+                    var spinner = $(this).find(".spinner").show();
+                    var submit = $(this).find("button[type=submit]").
+                       attr('disabled', 'disabled').
+                       blur();
+
+                    var enable = function() {
+                       window.clearInterval(timer);
+                       submit.removeAttr('disabled');
+                       spinner.hide();
+                       createCookie('ebook-download', '');
+                       $(form).find('input.selection').remove();
+                    };
+
+                    var timer = window.setInterval(function () {
+                      var cookieValue = readCookie('ebook-download');
+                      if (cookieValue == token) enable();
+                    }, 1000);
+
+                    $(window).unload(enable);
+
+                    var dynatree = tree.dynatree("getTree");
+                    var nodes = dynatree.getSelectedNodes();
+
+                    use_html = $(this).find('input[name=html:boolean]').first().attr('checked');
+                    if (use_html) {
+                      $(this).attr('method', 'GET');
                     }
+
+                    $.each(nodes, function() {
+                      var element = $("<input class='selection' type='hidden' />");
+                      element.attr({
+                          name: 'selNodes:list',
+                          value: this.data.key,
+                      });
+
+                      element.appendTo(form);
+                    });
+
+                    return true;
                   });
-                },
-              });
-
-              var control = $('#tree-%(unique_id)s-control');
-
-              control.find('a.toggle').click(function() {
-                 tree.dynatree("getRoot").visit(function(node) {
-                   node.select(true);
-                 });
-                return false;
-              });
-
-              tree.closest("form").submit(function(event) {
-                var form = this;
-                var token = new Date().getTime().toString();
-                $(this).find("input[name=token]").val(token);
-
-                var spinner = $(this).find(".spinner").show();
-                var submit = $(this).find("button[type=submit]").
-                   attr('disabled', 'disabled').
-                   blur();
-
-                var enable = function() {
-                   window.clearInterval(timer);
-                   submit.removeAttr('disabled');
-                   spinner.hide();
-                   createCookie('ebook-download', '');
-                   $(form).find('input.selection').remove();
-                };
-
-                var timer = window.setInterval(function () {
-                  var cookieValue = readCookie('ebook-download');
-                  if (cookieValue == token) enable();
-                }, 1000);
-
-                $(window).unload(enable);
-
-                var dynatree = tree.dynatree("getTree");
-                var nodes = dynatree.getSelectedNodes();
-
-                use_html = $(this).find('input[name=html:boolean]').first().attr('checked');
-                if (use_html) {
-                  $(this).attr('method', 'GET');
-                }
-
-                $.each(nodes, function() {
-                  var element = $("<input class='selection' type='hidden' />");
-                  element.attr({
-                      name: 'selNodes:list',
-                      value: this.data.key,
-                  });
-
-                  element.appendTo(form);
                 });
-
-                return true;
-              });
-            });
-            
-            $('#ebook_controls').toggle('fold', 1000);
-            run = false;
-        }
-        return false;
-    });
-  </script>
+                
+                $('#ebook_controls').toggle('fold', 1000);
+                run = false;
+            }
+            return false;
+        });
+      </script>
   </div>
 </div>
