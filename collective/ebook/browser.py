@@ -554,7 +554,7 @@ class HelperView(object):
         items, pub_date, mod_date = self.query(selNodes)
 
         if(self.context.getDefaultPage()):
-            items.insert(0, (getattr(self.context, self.context.getDefaultPage()), 1))
+            list(items).insert(0, (getattr(self.context, self.context.getDefaultPage()), 1))
 
         try:
             settings = getUtility(IRegistry).forInterface(ISettings)
