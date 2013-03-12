@@ -56,7 +56,7 @@
         $('#ebook_button').click(function(){
             if(run){
                 $(function() {
-                   var tree = $('#tree-%(unique_id)s');
+                   var tree = $('#tree-${options/unique_id}');
                    var url = tree.children("a").first().attr('href');
                    tree.dynatree({
                      fx: { height: "toggle", duration: 200 },
@@ -65,7 +65,7 @@
                      initAjax: {
                        url: url,
                        data: {
-                          key: "%(uid)s",
+                          key: "${options/uid}",
                        }
                     },
                     onLazyRead: function(node) {
@@ -79,7 +79,7 @@
                     },
                   });
 
-                  var control = $('#tree-%(unique_id)s-control');
+                  var control = $('#tree-${options/unique_id}-control');
 
                   control.find('a.toggle').click(function() {
                      tree.dynatree("getRoot").visit(function(node) {

@@ -146,7 +146,7 @@ class FormViewlet(object):
                 'folder': folder,
             }
 
-            return self.template(**options) % options
+            return self.template(**options)
 
         return u""
 
