@@ -130,6 +130,13 @@ class FormViewlet(object):
     template = ViewPageTemplateFile("form.pt")
 
     def update(self):
+        try:
+            settings = getUtility(IRegistry).forInterface(ISettings)
+            if(settings.allow_globally):
+                self.available = True
+                return
+        except BaseException:
+            settings = None
         field = self.context.getField('enablePDF')
         if field is not None:
             self.available = field.get(self.context)
@@ -169,6 +176,9 @@ class HelperView(object):
         if not self.request.getURL().endswith('/' + layout):
             return False
 
+        settings = getUtility(IRegistry).forInterface(ISettings)
+        if(settings.allow_globally):
+            return True
         field = self.context.getField('enablePDF')
         if field is not None:
             return field.get(self.context)

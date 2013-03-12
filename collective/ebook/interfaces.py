@@ -27,6 +27,10 @@ class ISettings(Interface):
         required=False
     )
 
+    allow_globally = schema.Bool(
+        title=_(u'Allow globally'),
+    )
+
     template = schema.Choice(
         title=_(u"Template"),
         default="print.pt",
