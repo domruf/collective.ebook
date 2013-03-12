@@ -205,6 +205,8 @@ class HelperView(object):
         except AttributeError:
             if(item.portal_type == 'Image'):
                 text = '%s\n<img src="%s"/>' % (title, item.absolute_url_path())
+            elif(item.portal_type == 'Folder'):
+                '<div class="section" id="%s">%s</div>' % (item.UID(), title)
             else:
                 return '<div class="section" id="%s">%s</div><p>%s content can not be embedded into the PDF.</p>' % (item.UID(), title, item.portal_type)
 
