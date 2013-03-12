@@ -437,9 +437,12 @@ class HelperView(object):
         url = image.get('src').encode('utf-8')
         if(url.startswith('resolveuid')):
             url = self.resolveuid(url)
+        portal_base = self.context.portal_url() + '/'
         if(url.startswith(self.context.portal_url())):
-            url = url[len(self.context.portal_url()):]
-            url = url.lstrip('/')
+            url = url.replace(portal_base, '')
+        portal_base = self.context.portal_url.absolute_url_path().replace('/portal_url', '') + '/'
+        if(url.startswith(portal_base)):
+            url = url.replace(portal_base, '')
         if '://' in url or url.startswith('data:'):
             return
 
@@ -448,9 +451,15 @@ class HelperView(object):
             data = getattr(obj, "data", FALLBACK_IMAGE)
         except AttributeError:
             # the image might be a thumbnail
-            img, kind = url.rsplit('/', 1)
-            obj = context.restrictedTraverse(urllib.unquote(img))
-            data = getattr(obj.getField('image').getScale(obj, kind.replace('image_', '')), "data", FALLBACK_IMAGE)
+            try:
+                img, kind = url.rsplit('/', 1)
+                obj = context.restrictedTraverse(urllib.unquote(img))
+                data = getattr(obj.getField('image').getScale(obj, kind.replace('image_', '')), "data", FALLBACK_IMAGE)
+            except:
+                logger.warn('error processing %s' % url)
+        except KeyError:
+            logger.warn('error processing %s' % image.get('src').encode('utf-8'))
+            return
         except NotFound:
             image.extract()
             return
@@ -467,9 +476,12 @@ class HelperView(object):
         
         if(url.startswith('resolveuid')):
             url = self.resolveuid(url)
-        if(url.startswith(self.context.absolute_url())):
-            url = url[len(self.context.absolute_url()):]
-            url = url.lstrip('/')
+        portal_base = self.context.portal_url() + '/'
+        if(url.startswith(self.context.portal_url())):
+            url = url.replace(portal_base, '')
+        portal_base = self.context.portal_url.absolute_url_path().replace('/portal_url', '') + '/'
+        if(url.startswith(portal_base)):
+            url = url.replace(portal_base, '')
         if url.startswith('#'):
             return
         if url.startswith('mailto:'):
@@ -491,7 +503,7 @@ class HelperView(object):
         except NotFound:
             obj = context
         except Exception:
-            logger.warn('error resolving url: %s' % url)
+            logger.warn('error resolving url: %s' % link.get('href', ''))
             return
         else:
             parent = obj.aq_parent
