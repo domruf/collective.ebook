@@ -147,9 +147,13 @@ class FormViewlet(object):
             if not getattr(aq_base(folder), 'isPrincipiaFolderish', False):
                 folder = folder.aq_parent
 
+            if hasattr(folder, 'UID'):
+                uid = folder.UID()
+            else:
+                uid = 'root'
             options = {
                 'unique_id': self.getUniqueId(),
-                'uid': folder.UID(),
+                'uid': uid,
                 'folder': folder,
             }
 
@@ -309,12 +313,15 @@ class HelperView(object):
         self.request.response.setHeader('Content-Type', 'application/json')
 
         catalog = getToolByName(self.context, 'portal_catalog')
-        brains = catalog.searchResults(UID=key)
+        if(key=='root'):
+            path = getToolByName(self.context, 'portal_url').getPortalPath()
+        else:
+            brains = catalog.searchResults(UID=key)
 
-        if not brains:
-            raise BadRequest("Object not found with UID: %r." % key)
+            if not brains:
+                raise BadRequest("Object not found with UID: %r." % key)
 
-        path = brains[0].getPath()
+            path = brains[0].getPath()
 
         results = catalog.searchResults(
             path={
@@ -322,7 +329,7 @@ class HelperView(object):
                 'depth': 1
             },
             allowedRolesAndUsers='Anonymous',
-            allowPDF=True,
+            #allowPDF=True,
             is_default_page=False,
             sort_on='getObjPositionInParent'
         )
@@ -618,7 +625,7 @@ class HelperView(object):
         brains = self.context.portal_catalog(
             path={'query': paths, 'depth': -1},
             allowedRolesAndUsers='Anonymous',
-            allowPDF=True,
+            #allowPDF=True,
             is_default_page=False,
             sort_on='getObjPositionInParent',
         )

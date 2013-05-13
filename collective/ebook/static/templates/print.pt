@@ -164,7 +164,7 @@
     <div class="cover">
       <div id="logo">
         <div class="pull-right">
-          <img tal:attributes="src python: inline('plone.png')" />
+          
         </div>
       </div>
 

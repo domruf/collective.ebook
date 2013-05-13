@@ -55,7 +55,7 @@
         var run = true;
         $('#ebook_button').click(function(){
             if(run){
-                $(function() {
+                (function() {
                    var tree = $('#tree-${options/unique_id}');
                    var url = tree.children("a").first().attr('href');
                    tree.dynatree({
@@ -133,7 +133,7 @@
 
                     return true;
                   });
-                });
+                })();
                 
                 $('#ebook_controls').toggle('fold', 1000);
                 run = false;
