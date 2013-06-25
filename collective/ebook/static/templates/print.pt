@@ -158,6 +158,12 @@
       counter-increment: toc-chapter;
       page-break-after: avoid;
     }
+    
+    img {
+        max-width: 1024px;
+        page-break-after: avoid;
+    }
+    
     </style>
   </head>
   <body tal:define="portal context/portal_url/getPortalObject">
