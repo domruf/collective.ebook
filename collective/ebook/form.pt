@@ -29,7 +29,7 @@
               Administrators can use these options.
             </p>
             <div class="field">
-              <input type="checkbox" name="html:boolean" class="noborder" />
+              <input type="checkbox" name="html" class="noborder" />
               <input type="hidden" name="html:boolean:default" />
               <label i18n:translate="Show source code">Show source code</label>
               <div class="formHelp" i18n:translate="Show source code help text">
@@ -116,7 +116,7 @@
                     var dynatree = tree.dynatree("getTree");
                     var nodes = dynatree.getSelectedNodes();
 
-                    use_html = $(this).find('input[name=html:boolean]').first().attr('checked');
+                    use_html = $(this).find('input[name=html]').first().attr('checked');
                     if (use_html) {
                       $(this).attr('method', 'GET');
                     }
