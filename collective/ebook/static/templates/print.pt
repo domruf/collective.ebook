@@ -90,7 +90,11 @@
     #toc {
       page-break-before: always;
     }
-
+    
+    .section #toc {
+      page-break-before: auto;
+    }
+    
     ul.toc {
       font-size: 9pt;
       page-break-after: always;
@@ -161,7 +165,11 @@
     
     img {
         max-width: 1024px;
-        page-break-after: avoid;
+        page-break-inside: avoid;
+    }
+    
+    div.frame {
+        page-break-inside: avoid;
     }
     
     </style>
