@@ -45,6 +45,9 @@ from zExceptions import InternalError
 from .interfaces import RESOURCE_PATH
 from .interfaces import ISettings
 
+from plone.app.redirector.interfaces import IRedirectionStorage
+from zope.component import getUtility
+
 logger = logging.getLogger("collective.ebook")
 shy = unichr(htmlentitydefs.name2codepoint['shy'])
 re_shy = re.compile(r'(?<=[\w0-9])([/\-.&])')
@@ -208,11 +211,14 @@ class HelperView(object):
             text = item.getText()
         except AttributeError:
             if(item.portal_type == 'Image'):
-                text = '%s\n<img src="%s"/>' % (title, item.absolute_url_path())
+                #text = '%s\n<img src="%s"/>' % (title, item.absolute_url_path())
+                return '' #don't show images for now
             elif(item.portal_type == 'Folder'):
-                '<div class="section" id="%s">%s</div>' % (item.UID(), title)
+                #text = '<div class="section" id="%s">%s</div>' % (item.UID(), title)
+                return '' #don't show folders for now
             else:
-                return '<div class="section" id="%s">%s</div><p>%s content can not be embedded into the PDF.</p>' % (item.UID(), title, item.portal_type)
+                #return '<div class="section" id="%s">%s</div><p>%s content can not be embedded into the PDF.</p>' % (item.UID(), title, item.portal_type)
+                return '' #don't show unkown types for now
 
         soup = BeautifulSoup(text)
 
@@ -511,8 +517,16 @@ class HelperView(object):
             obj = context.restrictedTraverse(urllib.unquote(url))
         except NotFound:
             obj = context
-        except Exception:
-            logger.warn('error resolving url: %s' % link.get('href', ''))
+        except AttributeError as e:
+            rds = queryUtility(IRedirectionStorage)
+            new_path = rds.get(getToolByName(self.context, 'portal_url').getPortalPath() + '/' + urllib.unquote(url))
+            if new_path:
+                obj = context.restrictedTraverse(new_path)
+            else:
+                logger.warn('error resolving url: %s exception: %s' % (link.get('href', ''), repr(e)))
+                return
+        except Exception as e:
+            logger.warn('error resolving url: %s exception: %s' % (link.get('href', ''), repr(e)))
             return
         else:
             parent = obj.aq_parent
@@ -562,7 +576,7 @@ class HelperView(object):
         # CGI-Escape
         url = cgi.escape(url)
 
-        parent.insert(index + 1, ' <span>(%s)</span>' % url)
+        parent.insert(index + 1, ' (%s)' % url)
 
     def submit(self, html=False, token=None, selNodes=None):
         authenticator = getMultiAdapter(
