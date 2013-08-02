@@ -165,7 +165,7 @@ class HelperView(object):
     namespace = engine.getBaseNames()
 
     def isEnabled(self):
-        layout = self.context.getDefaultLayout()
+        layout = self.context.getLayout()
         if not self.request.getURL().endswith('/' + layout):
             return False
 
